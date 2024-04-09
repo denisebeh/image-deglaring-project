@@ -1,4 +1,5 @@
-tensorflow
+tensorflow-macos
+tensorflow-metal
 tensorboard
 tf_slim
 opencv-python
