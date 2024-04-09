@@ -1,0 +1,11 @@
+VGG_Model/
+polar_rr_dataset/
+Submission_ckpt/
+__pycache__/
+
+*.zip
+*.ckpt
+*.index
+*.meta
+*.mat
+*.pyc
