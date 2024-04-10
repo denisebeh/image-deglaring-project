@@ -2,6 +2,7 @@ VGG_Model/
 polar_rr_dataset/
 Submission_ckpt/
 __pycache__/
+result/
 
 *.zip
 *.ckpt
@@ -9,3 +10,5 @@ __pycache__/
 *.meta
 *.mat
 *.pyc
+*.jpg
+.DS_Store

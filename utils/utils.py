@@ -74,10 +74,10 @@ def tf_overexp_mask(input):
 
 
 def get_metrics(metrics,out_mask, gt_target,gt_reflection,pred_image_t,pred_image_r):
-    metrics["T_ssim"] += structural_similarity(0.5*gt_target[0,:,:,4]*out_mask[0,:,:,0], 0.5*pred_image_t[0,:,:,4]*out_mask[0,:,:,0])
-    metrics["T_psnr"] += peak_signal_noise_ratio(0.5*gt_target[0,:,:,4]*out_mask[0,:,:,0], 0.5*pred_image_t[0,:,:,4]*out_mask[0,:,:,0], 1)
-    metrics["R_ssim"] += structural_similarity(0.5*gt_reflection[0,:,:,4]*out_mask[0,:,:,0], 0.5*pred_image_r[0,:,:,4]*out_mask[0,:,:,0])
-    metrics["R_psnr"] += peak_signal_noise_ratio(0.5*gt_reflection[0,:,:,4]*out_mask[0,:,:,0], 0.5*pred_image_r[0,:,:,4]*out_mask[0,:,:,0], 1)
+    metrics["T_ssim"] += structural_similarity(0.5*gt_target[0,:,:,4]*out_mask[0,:,:,0], 0.5*pred_image_t[0,:,:,4]*out_mask[0,:,:,0], data_range=1)
+    metrics["T_psnr"] += peak_signal_noise_ratio(0.5*gt_target[0,:,:,4]*out_mask[0,:,:,0], 0.5*pred_image_t[0,:,:,4]*out_mask[0,:,:,0], data_range=1)
+    metrics["R_ssim"] += structural_similarity(0.5*gt_reflection[0,:,:,4]*out_mask[0,:,:,0], 0.5*pred_image_r[0,:,:,4]*out_mask[0,:,:,0], data_range=1)
+    metrics["R_psnr"] += peak_signal_noise_ratio(0.5*gt_reflection[0,:,:,4]*out_mask[0,:,:,0], 0.5*pred_image_r[0,:,:,4]*out_mask[0,:,:,0], data_range=1)
     return metrics
 
 
@@ -127,7 +127,7 @@ def raw2imgs(raw_img):
 
 
 def prepare_single_item(raw_img_name):
-    raw_img = cv2.imread(raw_img_name, -1)/65535.
+    raw_img = cv2.imread(raw_img_name, -1)/255.
     I_0, I_45, I_90, I_135, I = raw2imgs(raw_img)
     return np.concatenate([i[np.newaxis,...,np.newaxis] for i in [I_0, I_45, I_90, I_135, I]],axis=3)
 
