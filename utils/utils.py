@@ -132,6 +132,12 @@ def prepare_single_item(raw_img_name):
     return np.concatenate([i[np.newaxis,...,np.newaxis] for i in [I_0, I_45, I_90, I_135, I]],axis=3)
 
 
+def prepare_single_image(raw_img):
+    raw_img = raw_img/255.
+    I_0, I_45, I_90, I_135, I = raw2imgs(raw_img)
+    return np.concatenate([i[np.newaxis,...,np.newaxis] for i in [I_0, I_45, I_90, I_135, I]],axis=3)
+
+
 def prepare_single_MTR_item(MR_item):
     M_name, R_name = MR_item
     tf_M = prepare_single_item(M_name)

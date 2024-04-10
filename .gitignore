@@ -3,6 +3,7 @@ polar_rr_dataset/
 Submission_ckpt/
 __pycache__/
 result/
+.vscode/
 
 *.zip
 *.ckpt

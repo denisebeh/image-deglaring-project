@@ -20,6 +20,7 @@ cycler
 Cython
 docutils
 enum34
+flask
 funcsigs
 gast
 gensim

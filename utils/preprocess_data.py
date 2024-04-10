@@ -25,6 +25,9 @@ def grayscale_image(img):
     - as the image has an alpha channel (i.e. 4 channels), it is first converted to RGB then to grayscale 
     - only for glare image and ground truth image
     """
+    if len(img.shape) < 3: # it is already a grayscale image
+        return img
+
     if img.shape[2] == 4:
         rgb_img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
     else:
