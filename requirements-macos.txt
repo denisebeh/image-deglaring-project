@@ -1,10 +1,11 @@
 flask
 matplotlib
 multiprocess
-opencv-python
+opencv-python==4.8.0.74
 requests
 scikit-learn
 scikit-image
 tensorboard
-tensorflow
+tensorflow-macos
+tensorflow-metal
 tf_slim

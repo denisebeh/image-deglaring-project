@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "!v*"
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: git config --global --add safe.directory '*'
+
+    - name: Download VGG19 weights
+      run: ./make.sh ci-export-vars
+
+    - name: Download checkpoint
+      run: ./make.sh ci-export-vars
+
+    - name: Build docker image
+      run: docker build -f ./docker/app.dockerfile -t deglare-app .
