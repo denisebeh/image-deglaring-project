@@ -13,3 +13,4 @@ result/
 *.pyc
 *.jpg
 .DS_Store
+test.json
