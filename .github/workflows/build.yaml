@@ -6,11 +6,11 @@ on:
     tags:
       - "!v*"
     branches:
-      - master
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   build:
@@ -20,10 +20,10 @@ jobs:
     - run: git config --global --add safe.directory '*'
 
     - name: Download VGG19 weights
-      run: ./make.sh ci-export-vars
+      run: wget -O VGG_Model.zip "https://hkustconnect-my.sharepoint.com/:u:/g/personal/cleiaa_connect_ust_hk/EZeGsvuqh1dJr0E2Fxf6IKoBQ7wZpGi3NFqZxhzC8-3GHg?e=LLWUZT&download=1"
 
     - name: Download checkpoint
-      run: ./make.sh ci-export-vars
+      run: wget -O result.zip --no-check-certificate -r "https://drive.google.com/file/d/1H98wT-dOloDICgQaRAoCEwGmv0FZ1VlL/view?usp=drive_link"
 
     - name: Build docker image
       run: docker build -f ./docker/app.dockerfile -t deglare-app .
