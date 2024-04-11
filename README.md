@@ -1,4 +1,4 @@
-# Image De-glaring Project
+# Image Deglaring Project
 
 ## 1. Introduction
 
