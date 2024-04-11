@@ -2,8 +2,7 @@ import cv2
 import numpy as np
 import json
 
-
-with open("test.json", "r", encoding="utf8") as f:
+with open("image.json", "r", encoding="utf8") as f:
     data = json.load(f)
 
 data = np.asarray(bytearray(data['image']), dtype="uint8")
