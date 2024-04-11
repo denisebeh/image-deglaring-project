@@ -1,4 +1,4 @@
-from flask import Flask, json, request
+from flask import Flask, json, request, abort
 import cv2
 import numpy as np
 from multiprocessing import Queue
@@ -46,25 +46,25 @@ class AppService:
         image = cv2.imdecode(img_data, -1)
 
         id = self.get_next_image_id()
-        print("processing id: ", id)
         self.infer_q.put((id, image))
 
         # Listen to res_q
-        data = {}
         while True:
-            print("getting item....")
             item = self.res_q.get()
-            print("got item: ", item[0])
             if id != item[0]:
-                print("putting back item in queue....")
                 self.res_q.put(item)
                 time.sleep(1)
             else:
-                print("item MATCHHH")
-                data['image'] = item[1]
+                encode = item[1]
                 break
-        response = self.app.response_class(
-            response=json.dumps(data),
-            status=200,
-        )
-        return response
+
+        # Check that encoding is successful
+        if encode and encode[0]:
+            data = { 'image': encode[1].tolist() }
+            response = self.app.response_class(
+                response=json.dumps(data),
+                status=200,
+            )
+            return response
+        else:
+            abort(500)

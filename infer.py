@@ -1,16 +1,12 @@
 import os
-import cv2
-from multiprocessing import Queue
 import numpy as np
-# import subprocess
+import subprocess
 import tensorflow as tf
-from utils import preprocess_data, utils
+from utils import utils
 from utils.network import DialUNet as UNet
 
 class InferService:
-    def __init__(self, ckpt_path, gpu_flag, infer_q: Queue, res_q: Queue):
-        self.infer_q = infer_q
-        self.res_q = res_q
+    def __init__(self, ckpt_path, gpu_flag, debug_flag):
         # if gpu_flag is enabled, we assume that the target is running with a linux machine
         # note that if we are running the service on a mac silicon arch, this flag should be disabled
         if gpu_flag:
@@ -41,39 +37,26 @@ class InferService:
         self.sess.run(tf.compat.v1.global_variables_initializer())
         var_restore = [v for v in tf.compat.v1.trainable_variables()]
         saver_restore = tf.compat.v1.train.Saver(var_restore)
-        for var in tf.compat.v1.trainable_variables():
-            print("Listing trainable variables ... ")
-            print(var)
+        if debug_flag:
+            for var in tf.compat.v1.trainable_variables():
+                print("Listing trainable variables ... ")
+                print(var)
 
         ckpt = tf.train.get_checkpoint_state(ckpt_path)
         assert ckpt
         saver_restore = tf.compat.v1.train.Saver([var for var in tf.compat.v1.trainable_variables()])
-        print('loaded ' + ckpt.model_checkpoint_path)
+        if debug_flag:
+            print('loaded ' + ckpt.model_checkpoint_path)
         saver_restore.restore(self.sess, ckpt.model_checkpoint_path)
 
-    # Callback function
-    def infer(self):
-        while True:
-            # Blocking get from queue until an item is available
-            (id, image) = self.infer_q.get()
-            print("infer processing id: ", id)
+    # Predict function
+    def predict(self, image):
+        h,w = utils.crop_shape(image)
 
-            cv2.imshow("test", image)
-            cv2.waitKey(0)
-            # pre-process the image
-            image = preprocess_data.grayscale_image(image)
-            tmp_all = utils.prepare_single_image(image)
-            h,w = utils.crop_shape(tmp_all)
-            print("infer finished preprocessing!")
+        _, pred_image_t, _, _ = self.sess.run(
+            [self.overexp_mask, self.transmission_layer, self.reflection_layer, self.tf_input],
+            feed_dict={self.input:image[:,:h,:w,:]}
+        )
 
-            # infer image to remove glare
-            _, pred_image_t, _, _ = self.sess.run(
-                [self.overexp_mask, self.transmission_layer, self.reflection_layer, self.tf_input],
-                feed_dict={self.input:tmp_all[:,:h,:w,:]}
-            )
-            print("infer finished predicting!")
-
-            img = np.uint16((0.5*pred_image_t[0,:,:,4]).clip(0,1)*65535.0)
-            data = cv2.imencode('.png', img)
-            print("infer finished encoding!")
-            self.res_q.put((id, data))
+        img = np.uint16((0.5*pred_image_t[0,:,:,4]).clip(0,1)*65535.0)
+        return img
