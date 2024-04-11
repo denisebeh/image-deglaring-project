@@ -23,9 +23,7 @@ jobs:
       run: wget -O VGG_Model.zip "https://hkustconnect-my.sharepoint.com/:u:/g/personal/cleiaa_connect_ust_hk/EZeGsvuqh1dJr0E2Fxf6IKoBQ7wZpGi3NFqZxhzC8-3GHg?e=LLWUZT&download=1"
 
     - name: Download checkpoint
-      run: | 
-        pip3 install gdown
-        gdown https://drive.google.com/file/d/1H98wT-dOloDICgQaRAoCEwGmv0FZ1VlL/view?usp=drive_link
+      run: wget -O result.zip "https://www.dropbox.com/scl/fi/26p8e04i0vf4wn3mf9zad/result.zip?rlkey=3zx74ym8m1prejdee2rcdi6kj&dl=0"
 
     - name: Build docker image
       run: docker build -f ./docker/app.dockerfile -t deglare-app .

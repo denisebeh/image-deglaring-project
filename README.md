@@ -50,8 +50,7 @@ wget -O VGG_Model.zip "https://hkustconnect-my.sharepoint.com/:u:/g/personal/cle
 3. Download model checkpoints
 
 ``` bash
-pip3 install gdown
-gdown https://drive.google.com/file/d/1H98wT-dOloDICgQaRAoCEwGmv0FZ1VlL/view?usp=drive_link
+wget -O result.zip "https://www.dropbox.com/scl/fi/26p8e04i0vf4wn3mf9zad/result.zip?rlkey=3zx74ym8m1prejdee2rcdi6kj&dl=0"
 ```
 
 4. Install Anaconda. Refer to https://docs.anaconda.com/free/anaconda/install/index.html to install.
